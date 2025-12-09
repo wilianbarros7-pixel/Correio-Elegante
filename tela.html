@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dj Will Da Zs - Tela Correio Elegante</title>
+    <style>
+        :root { --accent: #ff0037; --bg-dark: #000000; }
+        body { background: var(--bg-dark); color: white; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: sans-serif; text-shadow: 0 0 10px rgba(255, 0, 55, 0.6); }
+        .card { background: rgba(255, 255, 255, 0.03); border: 2px solid var(--accent); padding: 40px; border-radius: 15px; width: 80%; max-width: 900px; text-align: center; box-shadow: 0 0 50px rgba(255, 0, 55, 0.7); transition: opacity 1s ease-in-out, transform 1s; }
+        #message-box { min-height: 250px; display: flex; flex-direction: column; justify-content: center; }
+        h1 { font-size: 4rem; color: var(--accent); margin: 0 0 20px; text-transform: uppercase; }
+        .message-text { font-size: 2.5rem; font-weight: 300; margin: 20px 0; }
+        .message-sender { font-size: 1.5rem; font-style: italic; color: #ccc; }
+        .loading-message { font-size: 2rem; color: #777; }
+        .hidden { opacity: 0; transform: scale(0.9); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Correio Elegante 💌</h1>
+        <div id="message-box">
+            <div class="loading-message">Procurando mensagens aprovadas...</div>
+        </div>
+    </div>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbww6w8tEVJGrz9YQKe0iVUusHctyvZARm22ikgxAMnL2MLQNde1A5NNuJks2IocwvPciA/exec'; 
+        const messageBox = document.getElementById('message-box');
+        let currentMessageId = null; 
+
+        function displayMessage(data) {
+            if (data.ID === currentMessageId) return; 
+
+            const card = document.querySelector('.card');
+            card.classList.add('hidden');
+
+            setTimeout(() => {
+                if (data.Mensagem) {
+                    messageBox.innerHTML = `
+                        <div class="message-text">${data.Mensagem}</div>
+                        <div class="message-sender">${data.Remetente} para ${data.Destinatario}</div>
+                    `;
+                    currentMessageId = data.ID; 
+                } else {
+                    messageBox.innerHTML = '<div class="loading-message">Nenhuma mensagem nova no momento.</div>';
+                    currentMessageId = null;
+                }
+                card.classList.remove('hidden');
+            }, 1000);
+        }
+
+        async function fetchNewMessage() {
+            try {
+                // acao=lerCorreio
+                const response = await fetch(`${SCRIPT_URL}?acao=lerCorreio`);
+                const data = await response.json();
+                
+                if (data.status === 'success' && data.message) {
+                    displayMessage(data.message);
+                } else if (data.status === 'success' && !data.message) {
+                    displayMessage({}); 
+                }
+            } catch (error) {
+                messageBox.innerHTML = '<div class="loading-message" style="color:red;">Erro de conexão.</div>';
+            }
+        }
+        
+        fetchNewMessage();
+        setInterval(fetchNewMessage, 10000); 
+    </script>
+</body>
+</html>
