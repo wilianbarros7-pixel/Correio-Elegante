@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dj Will Da Zs - Correio Elegante</title>
+    <style>
+        :root { --accent: #ff0037; --text: #ffffff; --bg-dark: #0f0f0f; --subtext: #b3b3b3; }
+        body { font-family: sans-serif; background: var(--bg-dark); color: var(--text); padding: 20px; display: flex; justify-content: center; min-height: 100vh; }
+        .container { width: 100%; max-width: 400px; }
+        h2 { color: var(--accent); text-align: center; margin-bottom: 30px; text-transform: uppercase; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; color: var(--subtext); }
+        input[type="text"], textarea { width: 100%; padding: 12px; border: 1px solid #333; border-radius: 8px; background: #1a1a1a; color: white; font-size: 16px; box-sizing: border-box; outline: none; transition: border-color 0.3s; }
+        input:focus, textarea:focus { border-color: var(--accent); }
+        textarea { resize: vertical; height: 100px; }
+        button { width: 100%; padding: 15px; background: var(--accent); color: black; border: none; border-radius: 8px; font-weight: bold; font-size: 1rem; cursor: pointer; transition: opacity 0.3s; }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+        #message-count { font-size: 0.8rem; text-align: right; color: var(--subtext); }
+        #status-message { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; display: none; font-weight: bold; }
+        .success { background: #00ff8820; color: #00ff88; border: 1px solid #00ff88; }
+        .error { background: #ff003720; color: #ff0037; border: 1px solid #ff0037; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>💌 Correio Elegante DJ Will Da Zs</h2>
+        <form id="correio-form">
+            <div class="form-group">
+                <label for="destinatario">Para Quem (Opcional):</label>
+                <input type="text" id="destinatario" maxlength="30">
+            </div>
+            <div class="form-group">
+                <label for="mensagem">Mensagem (Max 180 caracteres):</label>
+                <textarea id="mensagem" maxlength="180" required></textarea>
+                <div id="message-count">180 restantes</div>
+            </div>
+            <div class="form-group">
+                <label for="remetente">De Quem (Opcional - Nick/Iniciais):</label>
+                <input type="text" id="remetente" maxlength="30">
+            </div>
+            <button type="submit" id="submit-btn">ENVIAR AGORA</button>
+        </form>
+        <div id="status-message"></div>
+    </div>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKlp25beikJnvNdcMVBiopgkDXUb_8c5MVh3vlNaQlFl-vuimXyxB1WJUOtMHnGqSrUw/exec'; 
+        const form = document.getElementById('correio-form');
+        const messageInput = document.getElementById('mensagem');
+        const countDisplay = document.getElementById('message-count');
+        const statusDisplay = document.getElementById('status-message');
+        const submitBtn = document.getElementById('submit-btn');
+
+        messageInput.addEventListener('input', () => {
+            const currentLength = messageInput.value.length;
+            const remaining = 180 - currentLength;
+            countDisplay.textContent = `${remaining} restantes`;
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'ENVIANDO...';
+
+            const formData = new FormData();
+            formData.append('destinatario', document.getElementById('destinatario').value || 'Alguém Especial');
+            formData.append('mensagem', messageInput.value);
+            formData.append('remetente', document.getElementById('remetente').value || 'Anônimo');
+
+            try {
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+                const result = await response.text();
+
+                if (result.trim() === 'OK') {
+                    statusDisplay.className = 'success';
+                    statusDisplay.textContent = '✅ Mensagem enviada! Aguarde a aprovação do DJ.';
+                    form.reset();
+                    messageInput.dispatchEvent(new Event('input'));
+                } else {
+                    throw new Error('Erro ao salvar a mensagem.');
+                }
+            } catch (error) {
+                statusDisplay.className = 'error';
+                statusDisplay.textContent = '❌ Erro no envio. Tente novamente.';
+            } finally {
+                statusDisplay.style.display = 'block';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'ENVIAR AGORA';
+            }
+        });
+    </script>
+</body>
+</html>
