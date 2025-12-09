@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MODERAÇÃO - Correio Elegante</title>
+    <style>
+        :root { --accent: #ff0037; --bg-dark: #111; --text: #ffffff; --pending: #ffc107; --success: #28a745; }
+        body { font-family: sans-serif; background: var(--bg-dark); color: var(--text); padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        h2 { color: var(--accent); border-bottom: 2px solid #333; padding-bottom: 10px; }
+        #moderation-list { margin-top: 20px; }
+        .message-item { background: #222; border-left: 5px solid var(--pending); padding: 15px; margin-bottom: 15px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .message-info { flex-grow: 1; margin-right: 20px; }
+        .message-info p { margin: 5px 0; }
+        .message-info strong { color: var(--pending); }
+        .message-content { font-size: 1.1em; }
+        .message-meta { font-size: 0.8em; color: #aaa; }
+        .btn-approve { background: var(--success); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .btn-approve:hover { background: #1e7e34; }
+        .btn-approve:disabled { background: #555; cursor: not-allowed; }
+        .empty-state { text-align: center; color: #aaa; padding: 50px; }
+        .refresh-btn { background: #333; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Painel de Moderação - Correio Elegante</h2>
+        <button class="refresh-btn" onclick="fetchMessages()">🔄 Atualizar Lista</button>
+        <div id="moderation-list">
+            <p style="text-align:center;">Carregando mensagens pendentes...</p>
+        </div>
+    </div>
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbww6w8tEVJGrz9YQKe0iVUusHctyvZARm22ikgxAMnL2MLQNde1A5NNuJks2IocwvPciA/exec'; 
+        const listContainer = document.getElementById('moderation-list');
+
+        async function fetchMessages() {
+            listContainer.innerHTML = '<p style="text-align:center;">Carregando mensagens pendentes...</p>';
+            
+            try {
+                // acao=listarPendentes
+                const response = await fetch(`${SCRIPT_URL}?acao=listarPendentes`);
+                const data = await response.json();
+
+                if (data.status === 'success' && data.messages.length > 0) {
+                    renderMessages(data.messages);
+                } else {
+                    listContainer.innerHTML = '<div class="empty-state">🎉 Não há mensagens pendentes no momento!</div>';
+                }
+            } catch (error) {
+                listContainer.innerHTML = `<div class="empty-state" style="color:var(--accent);">❌ Erro ao carregar a lista. Verifique a URL do Apps Script e a conexão.</div>`;
+            }
+        }
+
+        function renderMessages(messages) {
+            listContainer.innerHTML = '';
+            messages.forEach(msg => {
+                const item = document.createElement('div');
+                item.className = 'message-item';
+                item.innerHTML = `
+                    <div class="message-info">
+                        <p class="message-content">"${msg.Mensagem}"</p>
+                        <p class="message-meta">
+                            De: <strong>${msg.Remetente || 'Anônimo'}</strong> | 
+                            Para: ${msg.Destinatario || 'Alguém'} | 
+                            Recebido: ${new Date(msg.Data).toLocaleTimeString('pt-BR')}
+                        </p>
+                    </div>
+                    <button class="btn-approve" data-id="${msg.rowId}" onclick="approveMessage(this)">Aprovar (liberar para o Telão)</button>
+                `;
+                listContainer.appendChild(item);
+            });
+        }
+
+        async function approveMessage(button) {
+            const rowId = button.getAttribute('data-id');
+            button.disabled = true;
+            button.textContent = 'Aprovando...';
+
+            const formData = new FormData();
+            formData.append('acao', 'aprovarMensagem');
+            formData.append('rowId', rowId);
+
+            try {
+                const response = await fetch(SCRIPT_URL, { method: 'POST', body: formData });
+                const result = await response.text();
+
+                if (result.trim() === 'APROVADO') {
+                    button.closest('.message-item').style.borderLeftColor = 'var(--success)';
+                    button.textContent = '✅ APROVADO!';
+                    setTimeout(() => button.closest('.message-item').remove(), 1000); 
+                } else {
+                    alert('Erro ao aprovar. Tente novamente.');
+                    button.disabled = false;
+                    button.textContent = 'Aprovar (Erro)';
+                }
+            } catch (error) {
+                alert('Erro de conexão ao aprovar.');
+                button.disabled = false;
+                button.textContent = 'Aprovar';
+            }
+        }
+        fetchMessages();
+    </script>
+</body>
+</html>
