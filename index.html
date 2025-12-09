@@ -2,52 +2,139 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dj Will - Pagar Correio</title>
-    <style>
-        :root { --accent: #ff0037; --bg: #0f0f0f; --text: #fff; }
-        body { font-family: sans-serif; background: var(--bg); color: var(--text); padding: 20px; display: flex; justify-content: center; }
-        .container { width: 100%; max-width: 400px; }
-        
-        h2 { color: var(--accent); text-align: center; text-transform: uppercase; }
-        
-        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; box-sizing: border-box; }
-        input:focus, textarea:focus { border-color: var(--accent); outline: none; }
-        textarea { height: 100px; resize: none; }
-        
-        #roupa { border: 1px solid #666; background: #222; }
-        
-        .btn-pay { width: 100%; padding: 15px; background: #009ee3; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 1.1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-pay:hover { background: #007eb5; }
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dj Will Da Zs - Correio Elegante (R$ 2,00)</title>
+    
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
-        /* MODAL PIX */
-        #pix-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; justify-content: center; align-items: center; flex-direction: column; padding: 20px; box-sizing: border-box; }
-        .pix-content { background: #fff; color: #000; padding: 20px; border-radius: 15px; text-align: center; width: 100%; max-width: 350px; }
-        #qr-image { width: 200px; height: 200px; margin: 10px auto; display: block; }
-        .pix-code { background: #f0f0f0; padding: 10px; word-break: break-all; font-size: 0.8rem; border-radius: 5px; margin: 10px 0; border: 1px dashed #ccc; }
-        .btn-copy { background: var(--accent); color: white; border: none; padding: 10px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; }
-        .status-check { margin-top: 15px; font-weight: bold; color: #666; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    <style>
+        /* --- ESTILOS ORIGINAIS DJ WILL DA ZS --- */
+        :root {
+            --accent: #ff0037; /* Vermelho Neon */
+            --glass: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+            --subtext: #b3b3b3;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            margin: 0; padding: 0;
+            color: var(--text);
+            min-height: 100vh;
+            
+            /* FUNDO VIVO ANIMADO */
+            background: linear-gradient(-45deg, #000000, #1a0005, #0f0f0f, #220008);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            
+            display: flex; justify-content: center; align-items: flex-start;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         
-        .spinner { width: 15px; height: 15px; border: 3px solid #ccc; border-top: 3px solid #000; border-radius: 50%; animation: spin 1s linear infinite; }
+        /* Containers */
+        .app-container { width: 100%; max-width: 600px; padding: 20px 15px; min-height: 100vh; position: relative; }
+        .logo-container { margin-bottom: 30px; padding-top: 10px; text-align: center; }
+        .logo-img { max-width: 85%; height: auto; filter: drop-shadow(0 0 20px rgba(255, 0, 55, 0.4)); }
+        
+        h2 { 
+            color: var(--accent); 
+            text-align: center; 
+            margin-top: 15px;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(255, 0, 55, 0.4);
+        }
+
+        /* --- ESTILOS DO FORMULÁRIO --- */
+        label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--subtext); margin-top: 15px; }
+
+        input[type="text"], textarea {
+            width: 100%; padding: 16px 20px; border-radius: 12px; border: 1px solid #333;
+            background: #1a1a1a; color: white; font-size: 16px; outline: none; transition: 0.3s;
+            box-sizing: border-box;
+        }
+        input:focus, textarea:focus { border-color: var(--accent); background: #000; box-shadow: 0 0 15px rgba(255, 0, 55, 0.2); }
+        textarea { resize: vertical; height: 100px; }
+        
+        .hint { font-size: 0.8rem; color: #666; margin-top: 4px; }
+
+        /* Botão Principal de Pagamento */
+        .btn-pay { 
+            width: 100%; padding: 18px; 
+            background: var(--accent); color: #000; 
+            border: none; border-radius: 12px; 
+            font-weight: bold; font-size: 1.1rem; cursor: pointer; 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            margin-top: 25px;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .btn-pay:hover { background: #ff4a68; }
+        .btn-pay:active { transform: scale(0.98); }
+        .btn-pay:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* --- MODAL PIX (NEON STYLE) --- */
+        #pix-modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); z-index: 100; 
+            justify-content: center; align-items: center; flex-direction: column; 
+        }
+        .pix-content { 
+            background: #111; color: var(--text); 
+            padding: 30px; border-radius: 20px; 
+            text-align: center; width: 100%; max-width: 350px; 
+            box-shadow: 0 0 40px rgba(255, 0, 55, 0.3);
+            border: 1px solid var(--accent);
+        }
+        #qrcode-container { background: #fff; padding: 10px; border-radius: 10px; margin: 20px auto; }
+        .pix-code { 
+            background: #000; border: 1px dashed #444; color: #fff; 
+            padding: 10px; word-break: break-all; font-size: 0.8rem; border-radius: 5px; 
+            margin: 15px 0;
+        }
+        .btn-copy { 
+            background: var(--accent); color: black; border: none; padding: 12px; width: 100%; 
+            border-radius: 10px; font-weight: bold; cursor: pointer; 
+        }
+        .status-check { margin-top: 15px; font-weight: bold; color: var(--subtext); display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .spinner { width: 15px; height: 15px; border: 3px solid #333; border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .success-final { 
+            background: #111; border: 1px solid #00ff88; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>💌 Correio (R$ 2,00)</h2>
+    <div class="app-container">
+        <div class="logo-container">
+            <img src="logo.png" alt="Dj Will Da Zs" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block'">
+            <h1 id="logo-text" style="display:none; color:var(--accent); text-transform:uppercase; font-size: 2.5rem; margin:0;">Dj Will Da Zs</h1>
+
+            <h2>Correio Elegante (R$ 2,00)</h2>
+        </div>
+        
         <form id="pay-form">
-            <label>Identificação / Roupa (Obrigatório)</label>
-            <input type="text" id="roupa" placeholder="Ex: Menina de vestido azul..." required>
             
-            <label>Nome (Opcional)</label>
-            <input type="text" id="nome" placeholder="Nome da pessoa">
+            <label for="roupa">Identificação / Roupa (Obrigatório)</label>
+            <input type="text" id="roupa" maxlength="40" placeholder="Ex: De boné preto e camisa branca..." required>
+            <div class="hint">Ajude o DJ a encontrar a pessoa no telão!</div>
+
+            <label for="nome">Nome da Pessoa (Se souber):</label>
+            <input type="text" id="nome" maxlength="30" placeholder="Ex: Gabriel">
+
+            <label for="mensagem">Sua Mensagem:</label>
+            <textarea id="mensagem" maxlength="180" placeholder="Escreva seu recado..." required></textarea>
             
-            <label>Mensagem</label>
-            <textarea id="mensagem" maxlength="180" placeholder="Sua mensagem..." required></textarea>
-            
-            <label>Seu Nome (Opcional)</label>
-            <input type="text" id="remetente" placeholder="Anônimo">
+            <label for="remetente">Seu Nome (Opcional):</label>
+            <input type="text" id="remetente" maxlength="30" placeholder="Anônimo">
 
             <button type="submit" class="btn-pay">
                 <span>Pagar R$ 2,00 via Pix</span>
@@ -57,15 +144,18 @@
 
     <div id="pix-modal">
         <div class="pix-content">
-            <h3>Escaneie para Pagar</h3>
-            <img id="qr-image" src="" alt="QR Code">
-            <p style="font-size:0.9rem;">Ou copie e cole no app do banco:</p>
+            <div class="modal-title" style="color:var(--accent); font-size: 1.3rem;">Pix R$ 2,00</div>
+            <p style="font-size:0.9rem; color:#ccc; margin-top:5px;">Escaneie ou copie o código Pix:</p>
+            
+            <div id="qrcode-container"></div> 
+            
             <div class="pix-code" id="pix-text">...</div>
             <button class="btn-copy" onclick="copiarPix()">Copiar Código</button>
             
             <div class="status-check">
                 <div class="spinner"></div> Aguardando pagamento...
             </div>
+            <button onclick="fecharModal()" class="btn-close" style="background:#222; margin-top:15px;">Cancelar / Fechar</button>
         </div>
     </div>
 
@@ -78,12 +168,19 @@
         document.getElementById('pay-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.querySelector('.btn-pay');
-            btn.disabled = true; btn.innerText = 'Gerando Pix...';
+            btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Gerando Pix...';
 
-            // Prepara dados
-            const roupa = document.getElementById('roupa').value;
-            const nome = document.getElementById('nome').value;
-            const destinatario = nome ? `${nome} (${roupa})` : roupa;
+            const roupa = document.getElementById('roupa').value.trim();
+            const nome = document.getElementById('nome').value.trim();
+
+            if (!roupa && !nome) {
+                alert("Por favor, preencha a Roupa ou o Nome do Destinatário.");
+                btn.disabled = false; btn.innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
+                return;
+            }
+
+            // Lógica de Junção
+            const destinatario = nome ? `${nome} (${roupa})` : roupa; 
             
             const formData = new FormData();
             formData.append('acao', 'criarPagamento');
@@ -98,32 +195,54 @@
                 if(res.status === 'success') {
                     abrirModalPix(res);
                 } else {
-                    alert('Erro ao criar Pix: ' + res.message);
-                    btn.disabled = false; btn.innerText = 'Pagar R$ 2,00 via Pix';
+                    alert('Erro ao criar Pix: ' + (res.message || 'Verifique seu Access Token.'));
+                    btn.disabled = false; btn.innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
                 }
             } catch(err) {
-                alert('Erro de conexão.');
-                btn.disabled = false; btn.innerText = 'Pagar R$ 2,00 via Pix';
+                alert('Erro de conexão com a API.');
+                btn.disabled = false; btn.innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
             }
         });
 
+        function fecharModal() {
+            document.getElementById('pix-modal').style.display = 'none';
+            clearInterval(paymentCheckInterval);
+            document.querySelector('.btn-pay').innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
+            document.querySelector('.btn-pay').disabled = false;
+        }
+
         function abrirModalPix(data) {
             document.getElementById('pix-modal').style.display = 'flex';
-            document.getElementById('qr-image').src = `data:image/png;base64,${data.qrCodeBase64}`;
+            
+            // Renderiza QR Code
+            const container = document.getElementById('qrcode-container');
+            container.innerHTML = '';
+            new QRCode(container, {
+                text: data.pixCopiaCola,
+                width: 180,
+                height: 180
+            });
+
             document.getElementById('pix-text').innerText = data.pixCopiaCola;
             
-            // Começa a verificar se pagou
+            // Inicia a verificação de pagamento (Polling)
+            document.querySelector('.status-check').innerHTML = '<div class="spinner"></div> Aguardando pagamento...';
             iniciarVerificacao(data.paymentId);
         }
 
         function copiarPix() {
             const code = document.getElementById('pix-text').innerText;
             navigator.clipboard.writeText(code);
-            alert('Código copiado!');
+            alert('Pix Copiado! Cole no seu banco.');
         }
 
         function iniciarVerificacao(id) {
+            // Limpa qualquer interval antigo
+            clearInterval(paymentCheckInterval); 
+
             paymentCheckInterval = setInterval(async () => {
+                const statusDisplay = document.querySelector('.status-check');
+                
                 try {
                     const url = `${SCRIPT_URL}?acao=verificarPagamento&paymentId=${id}`;
                     const req = await fetch(url);
@@ -131,14 +250,20 @@
 
                     if(res.status === 'approved') {
                         clearInterval(paymentCheckInterval);
+                        
+                        // Altera o visual do modal para sucesso
+                        document.querySelector('.pix-content').classList.add('success-final');
                         document.querySelector('.pix-content').innerHTML = `
-                            <h2 style="color:green; font-size:3rem;">✔</h2>
+                            <h2 style="color:#00ff88; font-size:3rem; margin-top:0;">✔</h2>
                             <h3>Pagamento Confirmado!</h3>
-                            <p>Sua mensagem foi enviada para o DJ.</p>
-                            <button onclick="location.reload()" style="padding:10px; width:100%; border-radius:8px; border:none; background:#333; color:white; margin-top:10px;">Enviar Outra</button>
+                            <p style="color:#ccc;">Sua mensagem foi enviada para o DJ!</p>
+                            <button onclick="location.reload()" class="btn-copy" style="background:#00ff88; color:black; margin-top:20px;">Enviar Outra Mensagem</button>
                         `;
                     }
-                } catch(e) { console.error(e); }
+                } catch(e) { 
+                    // Em caso de erro de polling, mantém o spinner rodando e loga.
+                    console.error("Polling error:", e); 
+                }
             }, 3000); // Verifica a cada 3 segundos
         }
     </script>
