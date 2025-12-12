@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
     <title>Dj Will Da Zs - Correio Elegante (R$ 3,00)</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +35,7 @@
             color: var(--text);
             min-height: 100vh;
             
-            /* FUNDO ANIMADO MAIS "DARK CLUB" */
+            /* FUNDO ANIMADO */
             background: linear-gradient(135deg, #000000, #1a0005, #0a0a0a, #220008);
             background-size: 400% 400%;
             animation: gradientBG 10s ease infinite;
@@ -44,7 +49,7 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Container Principal com efeito Vidro */
+        /* Container Principal */
         .app-container { 
             width: 100%; 
             max-width: 500px; 
@@ -62,7 +67,6 @@
             overflow: hidden;
         }
 
-        /* Efeito de brilho passando no container */
         .app-container::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
             background: radial-gradient(circle, rgba(255,0,55,0.05) 0%, transparent 60%);
@@ -74,13 +78,14 @@
         .logo-container { text-align: center; margin-bottom: 25px; position: relative; z-index: 2; }
         
         .logo-img { 
-            max-width: 280px; /* <--- AUMENTADO AQUI PARA 280PX */
+            max-width: 280px; 
             height: auto; 
             filter: drop-shadow(0 0 15px var(--accent-glow));
             transition: transform 0.3s;
         }
         .logo-img:hover { transform: scale(1.05); }
 
+        /* --- CORREÇÃO DO TÍTULO E PREÇO --- */
         h2 { 
             color: white; 
             margin-top: 15px; 
@@ -88,6 +93,13 @@
             text-transform: uppercase; 
             letter-spacing: 1px;
             font-weight: 800;
+            
+            /* Isso garante que alinhe certinho */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap; /* Se não couber, desce para próxima linha */
+            gap: 10px; /* Espaço entre texto e preço */
         }
         
         .price-tag {
@@ -96,8 +108,10 @@
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
-            vertical-align: middle;
-            margin-left: 8px;
+            
+            /* IMPEDE QUE O PREÇO SE QUEBRE */
+            white-space: nowrap; 
+            
             box-shadow: 0 0 10px var(--accent);
         }
 
@@ -137,6 +151,7 @@
         .emoji-btn {
             background: rgba(255,255,255,0.1); border: none; border-radius: 8px;
             font-size: 1.2rem; padding: 8px; cursor: pointer; transition: 0.2s;
+            flex-shrink: 0; /* Impede amassar os emojis */
         }
         .emoji-btn:hover { background: var(--accent); transform: scale(1.1); }
 
@@ -268,7 +283,7 @@
     </div>
 
     <script>
-        // 🚨 LINK DO SCRIPT (O MESMO QUE VOCÊ JÁ TEM CONFIGURADO)
+        // 🚨 MANTENHA A URL DO SEU SCRIPT AQUI:
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKlp25beikJnvNdcMVBiopgkDXUb_8c5MVh3vlNaQlFl-vuimXyxB1WJUOtMHnGqSrUw/exec'; 
         
         let paymentCheckInterval;
