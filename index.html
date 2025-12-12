@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Dj Will Da Zs - Correio Elegante (R$ 2,00)</title>
+    <title>Dj Will Da Zs - Correio Elegante (R$ 3,00)</title>
     
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <style>
-        /* --- ESTILOS ORIGINAIS DJ WILL DA ZS --- */
         :root {
-            --accent: #ff0037; /* Vermelho Neon */
-            --glass: rgba(255, 255, 255, 0.05);
+            --accent: #ff0037; /* Vermelho Neon DJ Will */
+            --accent-glow: rgba(255, 0, 55, 0.5);
+            --bg-dark: #050505;
+            --glass: rgba(20, 20, 20, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
             --text: #ffffff;
-            --subtext: #b3b3b3;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Circular', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Montserrat', sans-serif;
             margin: 0; padding: 0;
             color: var(--text);
             min-height: 100vh;
             
-            /* FUNDO VIVO ANIMADO */
-            background: linear-gradient(-45deg, #000000, #1a0005, #0f0f0f, #220008);
+            /* FUNDO ANIMADO MAIS "DARK CLUB" */
+            background: linear-gradient(135deg, #000000, #1a0005, #0a0a0a, #220008);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientBG 10s ease infinite;
             
             display: flex; justify-content: center; align-items: flex-start;
         }
@@ -38,77 +43,167 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
-        
-        /* Containers */
-        .app-container { width: 100%; max-width: 600px; padding: 20px 15px; min-height: 100vh; position: relative; }
-        .logo-container { margin-bottom: 30px; padding-top: 10px; text-align: center; }
-        .logo-img { max-width: 85%; height: auto; filter: drop-shadow(0 0 20px rgba(255, 0, 55, 0.4)); }
-        
-        h2 { 
-            color: var(--accent); 
-            text-align: center; 
-            margin-top: 15px;
-            font-size: 1.8rem;
-            text-shadow: 0 0 10px rgba(255, 0, 55, 0.4);
+
+        /* Container Principal com efeito Vidro */
+        .app-container { 
+            width: 100%; 
+            max-width: 500px; 
+            margin: 20px 10px;
+            padding: 30px 25px; 
+            
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            
+            position: relative; 
+            overflow: hidden;
         }
 
-        /* --- ESTILOS DO FORMULÁRIO --- */
-        label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--subtext); margin-top: 15px; }
+        /* Efeito de brilho passando no container */
+        .app-container::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,0,55,0.05) 0%, transparent 60%);
+            animation: rotateGlow 10s linear infinite; pointer-events: none;
+        }
+        @keyframes rotateGlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Cabeçalho */
+        .logo-container { text-align: center; margin-bottom: 25px; position: relative; z-index: 2; }
+        
+        .logo-img { 
+            max-width: 180px; 
+            height: auto; 
+            filter: drop-shadow(0 0 15px var(--accent-glow));
+            transition: transform 0.3s;
+        }
+        .logo-img:hover { transform: scale(1.05); }
+
+        h2 { 
+            color: white; 
+            margin-top: 10px; 
+            font-size: 1.4rem; 
+            text-transform: uppercase; 
+            letter-spacing: 1px;
+            font-weight: 800;
+        }
+        
+        .price-tag {
+            background: var(--accent);
+            color: black;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            vertical-align: middle;
+            margin-left: 8px;
+            box-shadow: 0 0 10px var(--accent);
+        }
+
+        /* Formulário */
+        form { position: relative; z-index: 2; }
+
+        label { 
+            display: block; margin-bottom: 8px; margin-top: 20px;
+            font-weight: 600; color: #ddd; font-size: 0.9rem; letter-spacing: 0.5px;
+        }
 
         input[type="text"], textarea {
-            width: 100%; padding: 16px 20px; border-radius: 12px; border: 1px solid #333;
-            background: #1a1a1a; color: white; font-size: 16px; outline: none; transition: 0.3s;
-            box-sizing: border-box;
+            width: 100%; padding: 16px; 
+            border-radius: 12px; 
+            border: 1px solid #333;
+            background: rgba(0,0,0,0.4); 
+            color: white; 
+            font-size: 16px; 
+            font-family: 'Montserrat', sans-serif;
+            outline: none; transition: 0.3s;
         }
-        input:focus, textarea:focus { border-color: var(--accent); background: #000; box-shadow: 0 0 15px rgba(255, 0, 55, 0.2); }
-        textarea { resize: vertical; height: 100px; }
-        
-        .hint { font-size: 0.8rem; color: #666; margin-top: 4px; }
 
-        /* Botão Principal de Pagamento */
+        input:focus, textarea:focus { 
+            border-color: var(--accent); 
+            background: rgba(0,0,0,0.8); 
+            box-shadow: 0 0 15px rgba(255, 0, 55, 0.15); 
+        }
+
+        textarea { resize: none; height: 100px; }
+
+        .hint { font-size: 0.75rem; color: #888; margin-top: 5px; font-style: italic; }
+
+        /* Barra de Emojis */
+        .emoji-bar {
+            display: flex; gap: 10px; margin-top: 10px; overflow-x: auto; padding-bottom: 5px;
+        }
+        .emoji-btn {
+            background: rgba(255,255,255,0.1); border: none; border-radius: 8px;
+            font-size: 1.2rem; padding: 8px; cursor: pointer; transition: 0.2s;
+        }
+        .emoji-btn:hover { background: var(--accent); transform: scale(1.1); }
+
+        /* Contador de Caracteres */
+        .char-counter {
+            text-align: right; font-size: 0.75rem; color: #666; margin-top: 5px;
+        }
+
+        /* Botão Pagar */
         .btn-pay { 
-            width: 100%; padding: 18px; 
+            width: 100%; padding: 20px; 
             background: var(--accent); color: #000; 
-            border: none; border-radius: 12px; 
-            font-weight: bold; font-size: 1.1rem; cursor: pointer; 
-            display: flex; align-items: center; justify-content: center; gap: 10px; 
-            margin-top: 25px;
-            transition: background 0.2s, transform 0.2s;
+            border: none; border-radius: 50px; 
+            font-weight: 800; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; 
+            margin-top: 30px;
+            box-shadow: 0 5px 20px rgba(255, 0, 55, 0.4);
+            transition: 0.3s;
         }
-        .btn-pay:hover { background: #ff4a68; }
+        .btn-pay:hover { background: #ff335e; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 0, 55, 0.6); }
         .btn-pay:active { transform: scale(0.98); }
-        .btn-pay:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-pay:disabled { opacity: 0.7; filter: grayscale(1); cursor: not-allowed; }
 
-        /* --- MODAL PIX (NEON STYLE) --- */
+        /* MODAL PIX */
         #pix-modal { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); backdrop-filter: blur(8px); z-index: 100; 
+            background: rgba(0,0,0,0.95); backdrop-filter: blur(15px); z-index: 100; 
             justify-content: center; align-items: center; flex-direction: column; 
+            animation: fadeIn 0.3s ease;
         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         .pix-content { 
-            background: #111; color: var(--text); 
-            padding: 30px; border-radius: 20px; 
-            text-align: center; width: 100%; max-width: 350px; 
-            box-shadow: 0 0 40px rgba(255, 0, 55, 0.3);
-            border: 1px solid var(--accent);
+            background: #121212; color: white; 
+            padding: 30px; border-radius: 24px; 
+            text-align: center; width: 90%; max-width: 380px; 
+            box-shadow: 0 0 50px rgba(255, 0, 55, 0.2);
+            border: 1px solid #333;
+            position: relative;
         }
-        #qrcode-container { background: #fff; padding: 10px; border-radius: 10px; margin: 20px auto; }
-        .pix-code { 
-            background: #000; border: 1px dashed #444; color: #fff; 
-            padding: 10px; word-break: break-all; font-size: 0.8rem; border-radius: 5px; 
-            margin: 15px 0;
+
+        #qrcode-container { 
+            background: white; padding: 15px; border-radius: 15px; margin: 20px auto; 
+            width: fit-content;
         }
-        .btn-copy { 
-            background: var(--accent); color: black; border: none; padding: 12px; width: 100%; 
-            border-radius: 10px; font-weight: bold; cursor: pointer; 
-        }
-        .status-check { margin-top: 15px; font-weight: bold; color: var(--subtext); display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .spinner { width: 15px; height: 15px; border: 3px solid #333; border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .success-final { 
-            background: #111; border: 1px solid #00ff88; box-shadow: 0 0 40px rgba(0, 255, 136, 0.3);
+        .pix-code { 
+            background: #000; border: 1px dashed #444; color: #bbb; 
+            padding: 12px; word-break: break-all; font-size: 0.75rem; border-radius: 8px; 
+            margin: 15px 0; font-family: monospace;
         }
+        
+        .btn-copy { 
+            background: #333; color: white; border: 1px solid #555; padding: 12px; width: 100%; 
+            border-radius: 12px; font-weight: 600; cursor: pointer; transition: 0.2s;
+        }
+        .btn-copy:hover { background: #444; border-color: white; }
+
+        .status-check { margin-top: 20px; font-weight: 600; color: #888; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .spinner { width: 18px; height: 18px; border: 3px solid #333; border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Sucesso */
+        .success-content { border-color: #00ff88; box-shadow: 0 0 50px rgba(0, 255, 136, 0.2); }
+        .success-icon { font-size: 4rem; margin: 0; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
+
     </style>
 </head>
 <body>
@@ -116,70 +211,102 @@
     <div class="app-container">
         <div class="logo-container">
             <img src="logo.png" alt="Dj Will Da Zs" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-text').style.display='block'">
-            <h1 id="logo-text" style="display:none; color:var(--accent); text-transform:uppercase; font-size: 2.5rem; margin:0;">Dj Will Da Zs</h1>
+            <h1 id="logo-text" style="display:none; color:var(--accent); text-transform:uppercase; font-size: 2.5rem; margin:0; font-weight:900;">Dj Will Da Zs</h1>
 
-            <h2>Correio Elegante (R$ 2,00)</h2>
+            <h2>Correio Elegante <span class="price-tag">R$ 3,00</span></h2>
         </div>
         
         <form id="pay-form">
             
-            <label for="roupa">Identificação / Roupa (Obrigatório)</label>
+            <label for="roupa">👕 Identificação / Roupa (Obrigatório)</label>
             <input type="text" id="roupa" maxlength="40" placeholder="Ex: De boné preto e camisa branca..." required>
-            <div class="hint">Ajude o DJ a encontrar a pessoa no telão!</div>
+            <div class="hint">Descreva bem pra gente achar a pessoa no telão!</div>
 
-            <label for="nome">Nome da Pessoa (Se souber):</label>
+            <label for="nome">👤 Nome da Pessoa (Se souber):</label>
             <input type="text" id="nome" maxlength="30" placeholder="Ex: Gabriel">
 
-            <label for="mensagem">Sua Mensagem:</label>
-            <textarea id="mensagem" maxlength="180" placeholder="Escreva seu recado..." required></textarea>
+            <label for="mensagem">💬 Sua Mensagem:</label>
+            <textarea id="mensagem" maxlength="140" placeholder="Manda o papo..." required></textarea>
             
-            <label for="remetente">Seu Nome (Opcional):</label>
-            <input type="text" id="remetente" maxlength="30" placeholder="Anônimo">
+            <div class="emoji-bar">
+                <button type="button" class="emoji-btn" onclick="addEmoji('🔥')">🔥</button>
+                <button type="button" class="emoji-btn" onclick="addEmoji('❤️')">❤️</button>
+                <button type="button" class="emoji-btn" onclick="addEmoji('😍')">😍</button>
+                <button type="button" class="emoji-btn" onclick="addEmoji('😈')">😈</button>
+                <button type="button" class="emoji-btn" onclick="addEmoji('🍺')">🍺</button>
+                <button type="button" class="emoji-btn" onclick="addEmoji('🚀')">🚀</button>
+                <button type="button" class="emoji-btn" onclick="addEmoji('🎶')">🎶</button>
+            </div>
+            <div class="char-counter"><span id="char-count">0</span>/140</div>
+            
+            <label for="remetente">🕵️ Seu Nome (Opcional):</label>
+            <input type="text" id="remetente" maxlength="30" placeholder="Deixe vazio para Anônimo">
 
             <button type="submit" class="btn-pay">
-                <span>Pagar R$ 2,00 via Pix</span>
+                Pagar R$ 3,00 via Pix
             </button>
         </form>
     </div>
 
     <div id="pix-modal">
         <div class="pix-content">
-            <div class="modal-title" style="color:var(--accent); font-size: 1.3rem;">Pix R$ 2,00</div>
-            <p style="font-size:0.9rem; color:#ccc; margin-top:5px;">Escaneie ou copie o código Pix:</p>
+            <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;">Quase lá! 🚀</div>
+            <p style="font-size:0.9rem; color:#ccc; margin:0;">Pague para aparecer no telão</p>
             
             <div id="qrcode-container"></div> 
             
+            <div style="font-size:0.8rem; color:#888;">Copie e Cole no App do seu Banco:</div>
             <div class="pix-code" id="pix-text">...</div>
-            <button class="btn-copy" onclick="copiarPix()">Copiar Código</button>
+            <button class="btn-copy" onclick="copiarPix()">Copiar Código Pix</button>
             
             <div class="status-check">
                 <div class="spinner"></div> Aguardando pagamento...
             </div>
-            <button onclick="fecharModal()" class="btn-close" style="background:#222; margin-top:15px;">Cancelar / Fechar</button>
+            
+            <button onclick="fecharModal()" style="background:transparent; border:none; color:#555; margin-top:20px; cursor:pointer; text-decoration:underline;">Cancelar</button>
         </div>
     </div>
 
     <script>
-        // 🚨 ATUALIZE COM A NOVA URL DA API
+        // 🚨 LINK DO SCRIPT (O MESMO QUE VOCÊ JÁ TEM CONFIGURADO)
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKlp25beikJnvNdcMVBiopgkDXUb_8c5MVh3vlNaQlFl-vuimXyxB1WJUOtMHnGqSrUw/exec'; 
         
         let paymentCheckInterval;
 
+        // Contador de Caracteres
+        const msgInput = document.getElementById('mensagem');
+        const countSpan = document.getElementById('char-count');
+        msgInput.addEventListener('input', () => {
+            countSpan.innerText = msgInput.value.length;
+            if(msgInput.value.length >= 140) countSpan.style.color = 'red';
+            else countSpan.style.color = '#666';
+        });
+
+        // Adicionar Emoji
+        function addEmoji(emoji) {
+            if(msgInput.value.length < 138) {
+                msgInput.value += emoji;
+                msgInput.dispatchEvent(new Event('input')); // Atualiza o contador
+            }
+        }
+
         document.getElementById('pay-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.querySelector('.btn-pay');
-            btn.disabled = true; btn.innerHTML = '<div class="spinner"></div> Gerando Pix...';
+            const originalText = btn.innerText;
+            
+            btn.disabled = true; 
+            btn.innerHTML = '<div class="spinner" style="border-top-color:black;"></div> Gerando Pix...';
 
             const roupa = document.getElementById('roupa').value.trim();
             const nome = document.getElementById('nome').value.trim();
 
             if (!roupa && !nome) {
-                alert("Por favor, preencha a Roupa ou o Nome do Destinatário.");
-                btn.disabled = false; btn.innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
+                alert("Preencha a roupa ou o nome para o DJ te achar!");
+                btn.disabled = false; btn.innerText = originalText;
                 return;
             }
 
-            // Lógica de Junção
             const destinatario = nome ? `${nome} (${roupa})` : roupa; 
             
             const formData = new FormData();
@@ -195,37 +322,37 @@
                 if(res.status === 'success') {
                     abrirModalPix(res);
                 } else {
-                    alert('Erro ao criar Pix: ' + (res.message || 'Verifique seu Access Token.'));
-                    btn.disabled = false; btn.innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
+                    alert('Erro: ' + (res.message || 'Tente novamente.'));
+                    btn.disabled = false; btn.innerText = originalText;
                 }
             } catch(err) {
-                alert('Erro de conexão com a API.');
-                btn.disabled = false; btn.innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
+                alert('Erro de conexão. Verifique sua internet.');
+                btn.disabled = false; btn.innerText = originalText;
             }
         });
 
         function fecharModal() {
             document.getElementById('pix-modal').style.display = 'none';
             clearInterval(paymentCheckInterval);
-            document.querySelector('.btn-pay').innerHTML = '<span>Pagar R$ 2,00 via Pix</span>';
-            document.querySelector('.btn-pay').disabled = false;
+            const btn = document.querySelector('.btn-pay');
+            btn.innerText = 'Pagar R$ 3,00 via Pix';
+            btn.disabled = false;
         }
 
         function abrirModalPix(data) {
             document.getElementById('pix-modal').style.display = 'flex';
             
-            // Renderiza QR Code
             const container = document.getElementById('qrcode-container');
             container.innerHTML = '';
             new QRCode(container, {
                 text: data.pixCopiaCola,
-                width: 180,
-                height: 180
+                width: 180, height: 180,
+                colorDark : "#000000", colorLight : "#ffffff"
             });
 
             document.getElementById('pix-text').innerText = data.pixCopiaCola;
             
-            // Inicia a verificação de pagamento (Polling)
+            // Inicia Polling
             document.querySelector('.status-check').innerHTML = '<div class="spinner"></div> Aguardando pagamento...';
             iniciarVerificacao(data.paymentId);
         }
@@ -233,16 +360,23 @@
         function copiarPix() {
             const code = document.getElementById('pix-text').innerText;
             navigator.clipboard.writeText(code);
-            alert('Pix Copiado! Cole no seu banco.');
+            
+            const btn = document.querySelector('.btn-copy');
+            const originalText = btn.innerText;
+            btn.innerText = "Copiado! ✅";
+            btn.style.background = "#00ff88";
+            btn.style.color = "black";
+            
+            setTimeout(() => {
+                btn.innerText = originalText;
+                btn.style.background = "#333";
+                btn.style.color = "white";
+            }, 2000);
         }
 
         function iniciarVerificacao(id) {
-            // Limpa qualquer interval antigo
             clearInterval(paymentCheckInterval); 
-
             paymentCheckInterval = setInterval(async () => {
-                const statusDisplay = document.querySelector('.status-check');
-                
                 try {
                     const url = `${SCRIPT_URL}?acao=verificarPagamento&paymentId=${id}`;
                     const req = await fetch(url);
@@ -250,21 +384,28 @@
 
                     if(res.status === 'approved') {
                         clearInterval(paymentCheckInterval);
-                        
-                        // Altera o visual do modal para sucesso
-                        document.querySelector('.pix-content').classList.add('success-final');
-                        document.querySelector('.pix-content').innerHTML = `
-                            <h2 style="color:#00ff88; font-size:3rem; margin-top:0;">✔</h2>
-                            <h3>Pagamento Confirmado!</h3>
-                            <p style="color:#ccc;">Sua mensagem foi enviada para o DJ!</p>
-                            <button onclick="location.reload()" class="btn-copy" style="background:#00ff88; color:black; margin-top:20px;">Enviar Outra Mensagem</button>
-                        `;
+                        sucessoPagamento();
                     }
-                } catch(e) { 
-                    // Em caso de erro de polling, mantém o spinner rodando e loga.
-                    console.error("Polling error:", e); 
-                }
-            }, 3000); // Verifica a cada 3 segundos
+                } catch(e) { console.error(e); }
+            }, 3000);
+        }
+
+        function sucessoPagamento() {
+            const content = document.querySelector('.pix-content');
+            content.classList.add('success-content');
+            
+            // Toca confetes na tela
+            confetti({
+                particleCount: 150, spread: 70, origin: { y: 0.6 },
+                colors: ['#ff0037', '#ffffff', '#00ff88']
+            });
+
+            content.innerHTML = `
+                <div class="success-icon">✅</div>
+                <h2 style="color:#00ff88; margin:10px 0;">Sucesso!</h2>
+                <p style="color:#ddd;">Sua mensagem foi enviada para o DJ Will.</p>
+                <button onclick="location.reload()" class="btn-copy" style="background:var(--accent); margin-top:20px;">Enviar Outra</button>
+            `;
         }
     </script>
 </body>
