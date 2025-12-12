@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
+    <meta name="color-scheme" content="dark">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -19,7 +20,7 @@
 
     <style>
         :root {
-            --accent: #ff0037; /* Vermelho Neon DJ Will */
+            --accent: #ff0037; 
             --accent-glow: rgba(255, 0, 55, 0.5);
             --bg-dark: #050505;
             --glass: rgba(20, 20, 20, 0.7);
@@ -28,6 +29,11 @@
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        /* Garante que o fundo do navegador seja preto no overscroll do iPhone */
+        html {
+            background-color: #000000;
+        }
 
         body {
             font-family: 'Montserrat', sans-serif;
@@ -78,14 +84,13 @@
         .logo-container { text-align: center; margin-bottom: 25px; position: relative; z-index: 2; }
         
         .logo-img { 
-            max-width: 280px; 
+            max-width: 280px; /* LOGO GRANDE */
             height: auto; 
             filter: drop-shadow(0 0 15px var(--accent-glow));
             transition: transform 0.3s;
         }
         .logo-img:hover { transform: scale(1.05); }
 
-        /* --- CORREÇÃO DO TÍTULO E PREÇO --- */
         h2 { 
             color: white; 
             margin-top: 15px; 
@@ -94,12 +99,12 @@
             letter-spacing: 1px;
             font-weight: 800;
             
-            /* Isso garante que alinhe certinho */
+            /* FLEXBOX PARA NÃO CORTAR O PREÇO */
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-wrap: wrap; /* Se não couber, desce para próxima linha */
-            gap: 10px; /* Espaço entre texto e preço */
+            flex-wrap: wrap; 
+            gap: 10px; 
         }
         
         .price-tag {
@@ -108,10 +113,7 @@
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.9rem;
-            
-            /* IMPEDE QUE O PREÇO SE QUEBRE */
-            white-space: nowrap; 
-            
+            white-space: nowrap; /* NÃO QUEBRA LINHA */
             box-shadow: 0 0 10px var(--accent);
         }
 
@@ -151,11 +153,10 @@
         .emoji-btn {
             background: rgba(255,255,255,0.1); border: none; border-radius: 8px;
             font-size: 1.2rem; padding: 8px; cursor: pointer; transition: 0.2s;
-            flex-shrink: 0; /* Impede amassar os emojis */
+            flex-shrink: 0;
         }
         .emoji-btn:hover { background: var(--accent); transform: scale(1.1); }
 
-        /* Contador de Caracteres */
         .char-counter {
             text-align: right; font-size: 0.75rem; color: #666; margin-top: 5px;
         }
@@ -214,7 +215,6 @@
         .spinner { width: 18px; height: 18px; border: 3px solid #333; border-top: 3px solid var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* Sucesso */
         .success-content { border-color: #00ff88; box-shadow: 0 0 50px rgba(0, 255, 136, 0.2); }
         .success-icon { font-size: 4rem; margin: 0; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popIn { from { transform: scale(0); } to { transform: scale(1); } }
@@ -283,25 +283,22 @@
     </div>
 
     <script>
-        // 🚨 MANTENHA A URL DO SEU SCRIPT AQUI:
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyKlp25beikJnvNdcMVBiopgkDXUb_8c5MVh3vlNaQlFl-vuimXyxB1WJUOtMHnGqSrUw/exec'; 
         
         let paymentCheckInterval;
-
-        // Contador de Caracteres
         const msgInput = document.getElementById('mensagem');
         const countSpan = document.getElementById('char-count');
+        
         msgInput.addEventListener('input', () => {
             countSpan.innerText = msgInput.value.length;
             if(msgInput.value.length >= 140) countSpan.style.color = 'red';
             else countSpan.style.color = '#666';
         });
 
-        // Adicionar Emoji
         function addEmoji(emoji) {
             if(msgInput.value.length < 138) {
                 msgInput.value += emoji;
-                msgInput.dispatchEvent(new Event('input')); // Atualiza o contador
+                msgInput.dispatchEvent(new Event('input'));
             }
         }
 
@@ -309,7 +306,6 @@
             e.preventDefault();
             const btn = document.querySelector('.btn-pay');
             const originalText = btn.innerText;
-            
             btn.disabled = true; 
             btn.innerHTML = '<div class="spinner" style="border-top-color:black;"></div> Gerando Pix...';
 
@@ -356,7 +352,6 @@
 
         function abrirModalPix(data) {
             document.getElementById('pix-modal').style.display = 'flex';
-            
             const container = document.getElementById('qrcode-container');
             container.innerHTML = '';
             new QRCode(container, {
@@ -364,10 +359,7 @@
                 width: 180, height: 180,
                 colorDark : "#000000", colorLight : "#ffffff"
             });
-
             document.getElementById('pix-text').innerText = data.pixCopiaCola;
-            
-            // Inicia Polling
             document.querySelector('.status-check').innerHTML = '<div class="spinner"></div> Aguardando pagamento...';
             iniciarVerificacao(data.paymentId);
         }
@@ -375,13 +367,11 @@
         function copiarPix() {
             const code = document.getElementById('pix-text').innerText;
             navigator.clipboard.writeText(code);
-            
             const btn = document.querySelector('.btn-copy');
             const originalText = btn.innerText;
             btn.innerText = "Copiado! ✅";
             btn.style.background = "#00ff88";
             btn.style.color = "black";
-            
             setTimeout(() => {
                 btn.innerText = originalText;
                 btn.style.background = "#333";
@@ -396,7 +386,6 @@
                     const url = `${SCRIPT_URL}?acao=verificarPagamento&paymentId=${id}`;
                     const req = await fetch(url);
                     const res = await req.json();
-
                     if(res.status === 'approved') {
                         clearInterval(paymentCheckInterval);
                         sucessoPagamento();
@@ -408,13 +397,10 @@
         function sucessoPagamento() {
             const content = document.querySelector('.pix-content');
             content.classList.add('success-content');
-            
-            // Toca confetes na tela
             confetti({
                 particleCount: 150, spread: 70, origin: { y: 0.6 },
                 colors: ['#ff0037', '#ffffff', '#00ff88']
             });
-
             content.innerHTML = `
                 <div class="success-icon">✅</div>
                 <h2 style="color:#00ff88; margin:10px 0;">Sucesso!</h2>
